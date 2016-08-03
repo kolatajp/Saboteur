@@ -12,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 
 public class PaintTest1 {
 
@@ -65,8 +67,6 @@ public class PaintTest1 {
 		frame.setBounds( 100, 100, 450, 300 );
 		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
-		frame.getContentPane().setLayout( null );
-
 		JPanel panel = new PainterPanel();
 		panel.addMouseListener( new MouseAdapter() {
 			@Override
@@ -104,10 +104,10 @@ public class PaintTest1 {
 				}
 			}
 		} );
+		frame.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		panel.setBorder( new LineBorder( new Color( 0, 0, 0 ) ) );
-		panel.setBounds( 10, 11, 422, 251 );
 		frame.getContentPane().add( panel );
-		panel.setLayout( null );
+		panel.setLayout(new GridLayout(1, 0, 0, 0));
 
 		// own
 		( (PainterPanel) panel ).addLayer();

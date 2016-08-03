@@ -5,7 +5,9 @@ import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -19,6 +21,8 @@ public class PaintTest1 {
 	int lastX = 0, newX = 0;
 	int lastY = 0, newY = 0;
 	int xdiff, ydiff;
+
+	int iter = 0;
 
 	boolean released = false;
 
@@ -67,13 +71,21 @@ public class PaintTest1 {
 		panel.addMouseListener( new MouseAdapter() {
 			@Override
 			public void mouseReleased( MouseEvent arg0 ) {
-
 				released = false;
 			}
 
 			@Override
 			public void mousePressed( MouseEvent e ) {
 				( (PainterPanel) panel ).initDrag( e );
+				if ( e.getButton() == MouseEvent.BUTTON1 ) {
+					try {
+						( (PainterPanel) panel ).addObjectToLayer(
+								ImageIO.read( getClass().getResource( "/gold_1.png" ) ),
+								"id" + iter, e.getX(), e.getY(), 0 );
+					} catch ( IOException ex ) {
+						System.out.println( ex );
+					}
+				}
 			}
 		} );
 		panel.addMouseMotionListener( new MouseMotionAdapter() {
@@ -81,9 +93,23 @@ public class PaintTest1 {
 			public void mouseDragged( MouseEvent arg0 ) {
 				( (PainterPanel) panel ).drag( arg0 );
 			}
+
+			@Override
+			public void mouseMoved( MouseEvent arg0 ) {
+				PaintableObject[] ob = ( (PainterPanel) panel ).getObjectFromPos( arg0.getX(),
+						arg0.getY() );
+				for ( PaintableObject paintableObject : ob ) {
+					System.out.println( iter + ":" + paintableObject.getId() );
+					iter++;
+				}
+			}
 		} );
 		panel.setBorder( new LineBorder( new Color( 0, 0, 0 ) ) );
 		panel.setBounds( 10, 11, 422, 251 );
 		frame.getContentPane().add( panel );
+		panel.setLayout( null );
+
+		// own
+		( (PainterPanel) panel ).addLayer();
 	}
 }
